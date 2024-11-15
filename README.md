@@ -1,1 +1,1 @@
-### angular-product-lending-app.
+### angular-products-lending-app
