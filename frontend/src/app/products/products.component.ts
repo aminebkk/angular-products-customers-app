@@ -1,25 +1,49 @@
 import {Component, OnInit} from '@angular/core';
-import {NgForOf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
+import {ProductService} from '../services/product.service';
+import {Product} from '../model/Product.model';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-products',
   standalone: true,
   imports: [
-    NgForOf
+    NgForOf,
+    NgIf
   ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css'
 })
 export class ProductsComponent implements OnInit {
-  constructor() {}
-  products! : Array<any>
+  constructor(private productService:ProductService) {}
+  products! : Array<Product>
+  errorMessage!: string;
   ngOnInit() {
-    this.products = [
-      {id : 1 , name:"Computer"  , price : 7500},
-      {id : 2 , name:"Printer"  , price : 2800},
-      {id : 3 , name:"Smart Phone"  , price : 1500},
-    ]
+    this.handleGetAllProducts();
   }
 
+   handleGetAllProducts(){
+    this.productService.getAllProduct().subscribe({
+      next: (data)=> {
+        this.products = data;
+      },
+      error: err => {
+        this.errorMessage = err;
+      }
+    });
+  }
 
+  handleDeleteProduct(p: Product) {
+    let conf = confirm("Are you sure you want to delete this product?");
+    if(!conf) return ;
+     this.productService.DeleteProduct(p.id).subscribe({
+       next: (data)=> {
+          let index = this.products.indexOf(p);
+          this.products.splice(index, 1);
+       },
+       error: err => {
+         this.errorMessage = err;
+       }
+     })
+  }
 }
