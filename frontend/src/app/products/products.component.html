@@ -38,7 +38,7 @@
               <i *ngIf="p.promotion" class="bi bi-check-circle-fill text-success"></i>
             </td>
           <td>
-            <button [ngClass]="p.promotion?'btn btn-danger':'btn btn-success'">
+            <button (click)="handleSetPromotions(p)" [ngClass]="p.promotion?'btn btn-danger':'btn btn-success'">
               <span *ngIf="p.promotion">
                 Promo off
               </span>

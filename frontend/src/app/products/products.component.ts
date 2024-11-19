@@ -47,4 +47,17 @@ export class ProductsComponent implements OnInit {
        }
      })
   }
+
+  handleSetPromotions(p: Product) {
+    let promo = p.promotion;
+     this.productService.SetPromotion(p.id).subscribe({
+       next: (data)=> {
+        // console.log("OK I'M HERE");
+         p.promotion =!promo;
+       },
+       error: err => {
+         this.errorMessage = err;
+       }
+     })
+  }
 }
