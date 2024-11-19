@@ -9,6 +9,16 @@
       Products Lists
     </div>
     <div class="card-body">
+      <form [formGroup]="searchFormGroup"  (ngSubmit)="handleSearchProduct()">
+        <div class="input-group">
+           <label class="input-group-text"> Keyword :</label>
+          <input type="text" class="form-control" formControlName="keyword">
+          <button class="btn btn-info">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+
+      </form>
       <table class="table">
         <thead>
         <tr>
@@ -56,6 +66,18 @@
         </tr>
         </tbody>
       </table>
+      <ul class="nav nav-pills">
+        <li *ngFor="let item of Array.from({ length: totalPages }); let i = index">
+          <a
+            (click)="gotoPage(i)"
+            [ngClass]="i === currentPage ? 'btn-info' : 'btn-outline-info'"
+            class="btn ms-1 mt-1"
+          >
+            {{ i }}
+          </a>
+        </li>
+      </ul>
+
     </div>
   </div>
 </div>

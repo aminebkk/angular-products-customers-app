@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {NgClass, NgForOf, NgIf} from '@angular/common';
+import {JsonPipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {ProductService} from '../services/product.service';
 import {Product} from '../model/Product.model';
 import {Observable} from 'rxjs';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-products',
@@ -10,17 +11,40 @@ import {Observable} from 'rxjs';
   imports: [
     NgForOf,
     NgIf,
-    NgClass
+    NgClass,
+    ReactiveFormsModule,
+    JsonPipe
   ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css'
 })
 export class ProductsComponent implements OnInit {
-  constructor(private productService:ProductService) {}
+  constructor(private productService:ProductService , private fb : FormBuilder) {}
   products! : Array<Product>
   errorMessage!: string;
+  searchFormGroup!: FormGroup;
+  currentPage:number=0;
+  pageSize:number=5;
+  totalPages:number=5;
+  currentAction:String="all";
   ngOnInit() {
-    this.handleGetAllProducts();
+    this.handlePageProducts();
+    this.searchFormGroup = this.fb.group({
+      keyword: this.fb.control(null)
+    })
+  }
+
+  handlePageProducts(){
+    this.productService.getPagesProduct(this.currentPage,this.pageSize).subscribe({
+      next: (data)=> {
+        this.products = data.products;
+        this.totalPages = data.totalPages;
+        //console.log(data.totalPages);
+      },
+      error: err => {
+        this.errorMessage = err;
+      }
+    });
   }
 
    handleGetAllProducts(){
@@ -59,5 +83,29 @@ export class ProductsComponent implements OnInit {
          this.errorMessage = err;
        }
      })
+  }
+
+  handleSearchProduct() {
+    this.currentAction="Search";
+    this.currentPage=0;
+     let keyword = this.searchFormGroup.value.keyword;
+     this.productService.searchProduct(keyword , this.currentPage , this.pageSize).subscribe({
+       next: (data)=> {
+         this.products = data.products;
+         this.totalPages = data.totalPages;
+       }
+     })
+  }
+
+  protected readonly Array = Array;
+
+  gotoPage(i: number) {
+    this.currentPage = i;
+    if(this.currentAction==='all'){
+      this.handlePageProducts();
+    }else{
+      this.handleSearchProduct();
+    }
+
   }
 }
