@@ -22,7 +22,10 @@
             PRICE
           </th>
           <th>
-            ACTION
+            PROMOTION
+          </th>
+          <th>
+            ACTIONS
           </th>
         </tr>
         </thead>
@@ -32,10 +35,24 @@
             <td>{{ p.name }}</td>
             <td>{{ p.price }}</td>
             <td>
+              <i *ngIf="p.promotion" class="bi bi-check-circle-fill text-success"></i>
+            </td>
+          <td>
+            <button [ngClass]="p.promotion?'btn btn-danger':'btn btn-success'">
+              <span *ngIf="p.promotion">
+                Promo off
+              </span>
+              <span *ngIf="!p.promotion">
+                Promo on
+              </span>
+            </button>
+          </td>
+            <td>
               <button (click)="handleDeleteProduct(p)" class="btn btn-danger">
                 <i class="bi-trash"></i>
               </button>
             </td>
+
         </tr>
         </tbody>
       </table>

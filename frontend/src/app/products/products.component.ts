@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {ProductService} from '../services/product.service';
 import {Product} from '../model/Product.model';
 import {Observable} from 'rxjs';
@@ -9,7 +9,8 @@ import {Observable} from 'rxjs';
   standalone: true,
   imports: [
     NgForOf,
-    NgIf
+    NgIf,
+    NgClass
   ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css'
