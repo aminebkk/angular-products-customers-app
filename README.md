@@ -1,1 +1,1 @@
-### angular-products-lending-app
+### Angular-products-customers-app
